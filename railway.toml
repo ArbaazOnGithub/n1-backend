@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd Backend/'N1Solution Backend' && mvn clean package -DskipTests"
+
+[deploy]
+startCommand = "java -jar Backend/'N1Solution Backend'/target/*.jar"
+healthcheckPath = "/"
+restartPolicyType = "ON_FAILURE"
