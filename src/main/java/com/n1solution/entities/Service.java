@@ -20,6 +20,16 @@ public class Service {
     private int timesBought;
     private String imageUrl; // New field for image URL
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.LAZY)
     private List<ServiceField> fields;
+
+    private String slug;
+
+    @jakarta.persistence.PrePersist
+    @jakarta.persistence.PreUpdate
+    public void generateSlug() {
+        if (this.name != null) {
+            this.slug = this.name.toLowerCase().replaceAll("[^a-z0-9\\-]", "-").replaceAll("-+", "-");
+        }
+    }
 }
