@@ -14,14 +14,29 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
     public Order updateOrderStatus(Long id, String status) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        String oldStatus = order.getStatus();
         order.setStatus(status);
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+        // Send notification if status actually changed or if it was just pending
+        if (savedOrder.getUser() != null && savedOrder.getUser().getEmail() != null) {
+            emailService.sendOrderStatusUpdate(
+                savedOrder.getUser().getEmail(), 
+                savedOrder.getServiceType(), 
+                status
+            );
+        }
+        
+        return savedOrder;
     }
 
     // Add this method to handle order creation
