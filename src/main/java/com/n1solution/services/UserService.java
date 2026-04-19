@@ -2,12 +2,14 @@ package com.n1solution.services;
 
 import com.n1solution.entities.User;
 import com.n1solution.repositories.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -16,6 +18,20 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void promoteToAdmin() {
+        String adminEmail = "mohd.arbaaz.job@gmail.com";
+        Optional<User> userOpt = userRepository.findByEmail(adminEmail);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.getRole() != User.Role.ROLE_ADMIN) {
+                user.setRole(User.Role.ROLE_ADMIN);
+                userRepository.save(user);
+                System.out.println("USER PROMOTED TO ADMIN: " + adminEmail);
+            }
+        }
+    }
 
     public User createUser(User user) {
         // Check if the email already exists
