@@ -41,7 +41,17 @@ public class OrderService {
 
     // Add this method to handle order creation
     public Order createOrder(Order order) {
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        
+        // Notify admin about new order
+        try {
+            emailService.sendNewOrderAdminNotification(savedOrder);
+        } catch (Exception e) {
+            System.err.println("Warning: Admin notification email failed, but order was saved.");
+            e.printStackTrace();
+        }
+        
+        return savedOrder;
     }
     
     
