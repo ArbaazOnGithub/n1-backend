@@ -53,15 +53,19 @@ public class SecurityConfig {
 
         return http.build();
     }
+    @org.springframework.beans.factory.annotation.Value("${CORS_ALLOWED_ORIGIN:}")
+    private String corsAllowedOrigin;
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",  // For local development
-                "${CORS_ALLOWED_ORIGIN:}" // For production Vercel domain
-            ));
+        java.util.List<String> allowedOrigins = new java.util.ArrayList<>();
+        allowedOrigins.add("http://localhost:3000"); // Local development
+        if (corsAllowedOrigin != null && !corsAllowedOrigin.isEmpty()) {
+            allowedOrigins.add(corsAllowedOrigin); // Production Vercel domain
+        }
+        configuration.setAllowedOrigins(allowedOrigins);
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
