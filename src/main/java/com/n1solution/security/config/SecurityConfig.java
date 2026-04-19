@@ -65,7 +65,12 @@ public class SecurityConfig {
         if (corsAllowedOrigin != null && !corsAllowedOrigin.isEmpty()) {
             allowedOrigins.add(corsAllowedOrigin); // Production Vercel domain
         }
-        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedOriginPatterns(java.util.Arrays.asList(
+            "http://localhost:3000", 
+            "https://*.vercel.app", 
+            corsAllowedOrigin, 
+            corsAllowedOrigin != null ? corsAllowedOrigin.replaceAll("/$", "") : ""
+        ));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
