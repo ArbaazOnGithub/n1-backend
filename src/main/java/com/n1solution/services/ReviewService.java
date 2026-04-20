@@ -33,7 +33,21 @@ public class ReviewService {
     }
 
     public List<Review> getAllReviews() {
+        return reviewRepository.findByApprovedTrueOrderByCreatedAtDesc();
+    }
+
+    public List<Review> getAdminReviews() {
         return reviewRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    public void approveReview(Long id) {
+        Review review = reviewRepository.findById(id).orElseThrow();
+        review.setApproved(true);
+        reviewRepository.save(review);
+    }
+
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
     }
 
     public List<Review> getReviewsByService(String serviceName) {

@@ -5,26 +5,20 @@ import lombok.Data;
 import java.time.Instant;
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "contact_messages")
 @Data
-public class Review {
+public class ContactMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating; // 1-5 stars
+    private String fullName;
+    private String email;
+    private String phone;
 
     @Column(columnDefinition = "TEXT")
-    private String comment;
-
-    private String serviceName;
-
-    private boolean approved = false;
+    private String message;
 
     @Column(name = "created_at")
     private Instant createdAt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 }

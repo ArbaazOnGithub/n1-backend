@@ -30,6 +30,21 @@ public class ReviewController {
         return reviewService.getAllReviews();
     }
 
+    @GetMapping("/admin")
+    public List<Review> getAdminReviews() {
+        return reviewService.getAdminReviews();
+    }
+
+    @PutMapping("/admin/{id}/approve")
+    public void approveReview(@PathVariable Long id) {
+        reviewService.approveReview(id);
+    }
+
+    @DeleteMapping("/admin/{id}")
+    public void deleteReview(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+    }
+
     @GetMapping("/service/{serviceName}")
     public List<Review> getReviewsByService(@PathVariable String serviceName) {
         return reviewService.getReviewsByService(serviceName);

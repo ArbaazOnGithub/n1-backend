@@ -112,4 +112,43 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+    public void sendContactFormAdminNotification(com.n1solution.entities.ContactMessage contact) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(adminEmail);
+            helper.setSubject("📧 NEW CONTACT INQUIRY: From " + contact.getFullName());
+
+            String content = "<html>" +
+                    "<body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>" +
+                    "<div style='max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;'>" +
+                    "<div style='background: #3b82f6; padding: 20px; text-align: center; color: white;'>" +
+                    "<h1 style='margin: 0;'>New Inquiry Received</h1>" +
+                    "</div>" +
+                    "<div style='padding: 30px;'>" +
+                    "<h3>Contact Details</h3>" +
+                    "<hr style='border: 0; border-top: 1px solid #eef2f6; margin-bottom: 20px;' />" +
+                    "<p><strong>Full Name:</strong> " + contact.getFullName() + "</p>" +
+                    "<p><strong>Email Address:</strong> " + contact.getEmail() + "</p>" +
+                    "<p><strong>Phone Number:</strong> " + contact.getPhone() + "</p>" +
+                    "<div style='background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #eef2f6;'>" +
+                    "<p style='margin: 0 0 10px; font-size: 14px; color: #64748b; font-weight: bold;'>MESSAGE:</p>" +
+                    "<p style='margin: 0; white-space: pre-wrap;'>" + contact.getMessage() + "</p>" +
+                    "</div>" +
+                    "<p style='font-size: 13px; color: #64748b;'>This message was sent from the N1Solution Contact Form.</p>" +
+                    "</div>" +
+                    "</div>" +
+                    "</body>" +
+                    "</html>";
+
+            helper.setText(content, true);
+            mailSender.send(message);
+            System.out.println("Admin notification sent for inquiry from " + contact.getFullName());
+        } catch (MessagingException e) {
+            System.err.println("Failed to send admin notification for inquiry from " + contact.getFullName());
+            e.printStackTrace();
+        }
+    }
 }
