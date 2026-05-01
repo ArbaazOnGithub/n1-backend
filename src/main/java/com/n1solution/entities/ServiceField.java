@@ -17,6 +17,6 @@ public class ServiceField {
     private String name;
     private String label;
     private String type;
-    @ElementCollection
+    @ElementCollection(fetch = jakarta.persistence.FetchType.EAGER)
     private List<String> options;
 }

@@ -20,10 +20,10 @@ public class Order {
 
     private String status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderDetail> details;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Many orders can belong to one user
+    @ManyToOne(fetch = FetchType.EAGER) // Many orders can belong to one user
     @JoinColumn(name = "user_id", nullable = false) // Foreign key to the User table
     private User user;
 }

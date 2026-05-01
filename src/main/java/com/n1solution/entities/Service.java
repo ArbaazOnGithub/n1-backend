@@ -20,7 +20,7 @@ public class Service {
     private int timesBought;
     private String imageUrl; // New field for image URL
 
-    @OneToMany(cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.EAGER)
     private List<ServiceField> fields;
 
     private String slug;

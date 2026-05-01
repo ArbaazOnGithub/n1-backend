@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 public class EmailService {
@@ -18,6 +19,7 @@ public class EmailService {
     @org.springframework.beans.factory.annotation.Value("${spring.mail.username}")
     private String adminEmail;
 
+    @Async
     public void sendOrderStatusUpdate(String toEmail, String orderType, String newStatus) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -59,6 +61,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendNewOrderAdminNotification(com.n1solution.entities.Order order) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -113,6 +116,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendContactFormAdminNotification(com.n1solution.entities.ContactMessage contact) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
