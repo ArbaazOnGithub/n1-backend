@@ -7,4 +7,5 @@ import com.n1solution.entities.Service;
 
 @Repository
 public interface ServiceRepository extends JpaRepository <Service, Long> {
+    boolean existsByName(String name);
 }
