@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import com.n1solution.entities.Service;
 import com.n1solution.entities.ServiceField;
+import com.n1solution.entities.FAQ;
 import com.n1solution.repositories.ServiceRepository;
 
 @Component
@@ -30,6 +31,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 createField("websiteType", "Website Type", "select", Arrays.asList("Static Website", "Dynamic Website", "E-commerce Website")),
                 createField("pages", "Number of Pages", "text", null),
                 createField("additionalFeatures", "Additional Features/Requirements", "text", null)
+            ),
+            Arrays.asList(
+                new FAQ("How long does it take to build a website?", "Typically 2–6 weeks depending on complexity."),
+                new FAQ("Will my website be mobile-friendly?", "Yes, all our websites are fully responsive."),
+                new FAQ("Do you provide post-launch support?", "Yes, we offer maintenance packages.")
             )
         );
 
@@ -41,6 +47,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 createField("websiteUrl", "Website URL", "text", null),
                 createField("keywords", "Target Keywords (comma-separated)", "text", null),
                 createField("competitors", "Key Competitors", "text", null)
+            ),
+            Arrays.asList(
+                new FAQ("How long until I see results?", "SEO typically shows results in 3–6 months."),
+                new FAQ("Do you guarantee first-page rankings?", "We guarantee best efforts; no ethical agency can guarantee rankings."),
+                new FAQ("What do monthly reports include?", "Keyword rankings, traffic analysis, and recommended actions.")
             )
         );
 
@@ -53,6 +64,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 createField("tagline", "Company Tagline (if any)", "text", null),
                 createField("industry", "Industry / Niche", "text", null),
                 createField("colorPreferences", "Color Preferences", "text", null)
+            ),
+            Arrays.asList(
+                new FAQ("How many revisions do I get?", "Unlimited revisions until you're satisfied."),
+                new FAQ("What file formats will I receive?", "PNG, SVG, PDF, and AI source files."),
+                new FAQ("How long does the process take?", "Initial concepts within 3–5 business days.")
             )
         );
 
@@ -65,6 +81,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 createField("address", "Full Business Address", "text", null),
                 createField("phoneNumber", "Business Phone Number", "text", null),
                 createField("website", "Business Website", "text", null)
+            ),
+            Arrays.asList(
+                new FAQ("What is Google Business Profile?", "It's your free listing on Google Search and Maps."),
+                new FAQ("Can you help if my listing was suspended?", "Yes, we handle reinstatement cases."),
+                new FAQ("How long until my listing is verified?", "Typically 3–14 days via Google's process.")
             )
         );
 
@@ -76,6 +97,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 createField("domainName", "Domain Name", "text", null),
                 createField("hostingPlan", "Hosting Plan Type", "select", Arrays.asList("Basic Hosting", "Premium Managed Hosting", "Business Cloud Hosting")),
                 createField("billingCycle", "Billing Cycle", "select", Arrays.asList("Monthly", "Yearly (10% Off)"))
+            ),
+            Arrays.asList(
+                new FAQ("What is the uptime guarantee?", "We guarantee 99.9% uptime with SLA."),
+                new FAQ("Can I migrate my existing website?", "Yes, we provide free website migration."),
+                new FAQ("Is SSL included?", "Yes, SSL is free with all hosting plans.")
             )
         );
 
@@ -86,16 +112,22 @@ public class DatabaseSeeder implements CommandLineRunner {
             Arrays.asList(
                 createField("serviceName", "What service do you need?", "text", null),
                 createField("requirements", "Your requirements / description", "text", null)
+            ),
+            Arrays.asList(
+                new FAQ("How do you handle custom services?", "Once you submit your requirements, we assign a dedicated specialist to consult with you and draft a custom plan."),
+                new FAQ("Is there any obligation after submitting?", "No, the consultation and request are completely free."),
+                new FAQ("What's the response time?", "Our team will contact you within 24 hours, usually much sooner.")
             )
         );
     }
 
-    private void createServiceIfNotFound(String name, String imageUrl, List<ServiceField> fields) {
+    private void createServiceIfNotFound(String name, String imageUrl, List<ServiceField> fields, List<FAQ> faqs) {
         if (!serviceRepository.existsByName(name)) {
             Service service = new Service();
             service.setName(name);
             service.setImageUrl(imageUrl);
             service.setFields(fields);
+            service.setFaqs(faqs);
             service.setTimesBought(0);
             serviceRepository.save(service);
             System.out.println("[DatabaseSeeder] Seeded service: " + name);

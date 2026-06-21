@@ -90,4 +90,13 @@ public class OrderController {
         }
         return orderService.getOrdersByUserId(userId);
     }
+
+    @PutMapping("/{id}/cancel")
+    public Order cancelOrder(@PathVariable Long id, HttpServletRequest httpRequest) {
+        Long userId = (Long) httpRequest.getAttribute("userId");
+        if (userId == null) {
+            throw new RuntimeException("User ID not found in request. User may not be logged in.");
+        }
+        return orderService.cancelOrder(id, userId);
+    }
 }

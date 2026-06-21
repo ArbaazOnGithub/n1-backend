@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.ElementCollection;
 import lombok.Data;
 
 @Entity
@@ -22,6 +23,9 @@ public class Service {
 
     @OneToMany(cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.EAGER)
     private List<ServiceField> fields;
+
+    @ElementCollection(fetch = jakarta.persistence.FetchType.EAGER)
+    private List<FAQ> faqs;
 
     private String slug;
 

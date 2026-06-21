@@ -82,4 +82,30 @@ public class OrderService {
     public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
     }
+
+    public Order cancelOrder(Long id, Long userId) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        if (order.getUser() == null || !order.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Forbidden: You do not own this order");
+        }
+        
+        if (!"pending".equalsIgnoreCase(order.getStatus())) {
+            throw new RuntimeException("Cannot cancel order in status: " + order.getStatus());
+        }
+        
+        order.setStatus("cancelled");
+        Order saved = orderRepository.save(order);
+        
+        if (saved.getUser() != null && saved.getUser().getEmail() != null) {
+            emailService.sendOrderStatusUpdate(
+                saved.getUser().getEmail(),
+                saved.getServiceType(),
+                "cancelled"
+            );
+        }
+        
+        return saved;
+    }
 }
