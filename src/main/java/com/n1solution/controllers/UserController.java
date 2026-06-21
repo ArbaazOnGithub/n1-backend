@@ -1,8 +1,11 @@
 package com.n1solution.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +20,8 @@ import com.n1solution.services.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-//@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -34,25 +37,32 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User created = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (RuntimeException e) {
+            String message = e.getMessage();
+            if (message != null && message.toLowerCase().contains("email already exists")) {
+                // 409 Conflict — duplicate email, return clear JSON message
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Map.of("message", "This email is already registered. Please sign in."));
+            }
+            // 400 Bad Request for other validation errors
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", message != null ? message : "Registration failed. Please try again."));
+        }
     }
-    
+
     @GetMapping("/new-users")
     public List<User> getNewUsers() {
         return userService.findByRegistrationDate();
     }
-    
+
     @DeleteMapping("/{id}/delete")
     public void deleteById(@PathVariable Long id) {
-    	userService.deleteUser(id);
+        userService.deleteUser(id);
     }
-    
-    
-    
-    
-    
-    
-    
-    
 }
